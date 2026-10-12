@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generador de contraseñas seguras</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>🔑 Generador de contraseñas seguras</h1>
+  <p class="sub">Todo se genera en tu navegador. Nada se guarda ni se envía.</p>
+
+  <div class="salida">
+    <div id="resultado" aria-live="polite"></div>
+    <button id="copiar" type="button">Copiar</button>
+  </div>
+  <div class="barra"><div id="nivel"></div></div>
+  <div id="etiqueta"></div>
+
+  <div class="fila">
+    <label for="longitud">Longitud</label>
+    <strong id="valorLongitud">16</strong>
+  </div>
+  <input type="range" id="longitud" min="8" max="64" value="16">
+
+  <label class="opcion"><input type="checkbox" id="mayusculas" checked> Mayúsculas (A-Z)</label>
+  <label class="opcion"><input type="checkbox" id="numeros" checked> Números (0-9)</label>
+  <label class="opcion"><input type="checkbox" id="simbolos" checked> Símbolos (!@#$…)</label>
+
+  <button class="principal" id="generar" type="button">Generar contraseña</button>
+  <p class="aviso">Usa <code>crypto.getRandomValues</code>, el equivalente seguro de <code>secrets</code> en Python.</p>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
