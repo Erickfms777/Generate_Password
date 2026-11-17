@@ -10,6 +10,7 @@
   --fuerte: #3fb950;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body {
   margin: 0;
   min-height: 100vh;
@@ -30,12 +31,36 @@ main {
 }
 h1 { font-size: 1.3rem; margin: 0 0 4px; }
 p.sub { margin: 0 0 20px; color: var(--suave); font-size: .9rem; }
+
+/* Pestañas */
+.pestanas {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  padding: 4px;
+  background: var(--bg);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+}
+.pestana {
+  flex: 1;
+  padding: 8px 0;
+  background: transparent;
+  border: 0;
+  color: var(--suave);
+  font-weight: 600;
+}
+.pestana:hover { background: #21262d; }
+.pestana[aria-selected="true"] { background: #21262d; color: var(--texto); }
+
+/* Resultado y botones */
 .salida {
   display: flex;
   gap: 8px;
   margin-bottom: 8px;
 }
-#resultado {
+.salida.separado { margin-top: 16px; }
+.resultado {
   flex: 1;
   min-width: 0;
   padding: 12px;
@@ -49,6 +74,7 @@ p.sub { margin: 0 0 20px; color: var(--suave); font-size: .9rem; }
   display: flex;
   align-items: center;
 }
+.resultado.pequeno { font-size: .8rem; }
 button {
   border: 1px solid var(--borde);
   background: #21262d;
@@ -59,6 +85,7 @@ button {
   cursor: pointer;
 }
 button:hover { background: #30363d; }
+button:disabled { opacity: .6; cursor: wait; }
 button.principal {
   width: 100%;
   margin-top: 20px;
@@ -68,6 +95,14 @@ button.principal {
   font-weight: 600;
 }
 button.principal:hover { background: #3fb950; }
+button.secundario {
+  margin-top: 8px;
+  padding: 6px 10px;
+  font-size: .8rem;
+  color: var(--suave);
+}
+
+/* Generador */
 .barra {
   height: 6px;
   background: var(--borde);
@@ -94,4 +129,22 @@ label.opcion {
 }
 input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--acento); }
 .aviso { margin-top: 16px; font-size: .8rem; color: var(--suave); text-align: center; }
+
+/* Cifrar y descifrar */
+.ayuda { margin: 0 0 4px; font-size: .9rem; color: var(--suave); }
+label.campo { display: block; margin: 16px 0 6px; font-size: .9rem; }
+input[type=password], input[type=text], textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  color: var(--texto);
+  font: .95rem ui-monospace, "Cascadia Code", Menlo, monospace;
+}
+textarea { resize: vertical; }
+.estado { min-height: 1.4em; margin: 8px 0 0; font-size: .85rem; color: var(--suave); }
+.estado.error { color: var(--debil); }
+.estado.ok { color: var(--fuerte); }
+
 :focus-visible { outline: 2px solid #58a6ff; outline-offset: 2px; }
