@@ -1,82 +1,150 @@
-const MINUSCULAS = "abcdefghijklmnopqrstuvwxyz";
-const MAYUSCULAS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const NUMEROS = "0123456789";
-const SIMBOLOS = "!@#$%^&*()-_=+[]{};:,.<>?";
+:root {
+  --bg: #0d1117;
+  --panel: #161b22;
+  --borde: #30363d;
+  --texto: #e6edf3;
+  --suave: #8b949e;
+  --acento: #2ea043;
+  --debil: #f85149;
+  --media: #d29922;
+  --fuerte: #3fb950;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: var(--bg);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+main {
+  width: 100%;
+  max-width: 460px;
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 24px;
+}
+h1 { font-size: 1.3rem; margin: 0 0 4px; }
+p.sub { margin: 0 0 20px; color: var(--suave); font-size: .9rem; }
 
-// Entero aleatorio en [0, max) sin sesgo de módulo (rechazo de valores sobrantes)
-function enteroAleatorio(max) {
-  const limite = Math.floor(0x100000000 / max) * max;
-  const buffer = new Uint32Array(1);
-  do {
-    crypto.getRandomValues(buffer);
-  } while (buffer[0] >= limite);
-  return buffer[0] % max;
+/* Pestañas */
+.pestanas {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  padding: 4px;
+  background: var(--bg);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+}
+.pestana {
+  flex: 1;
+  padding: 8px 0;
+  background: transparent;
+  border: 0;
+  color: var(--suave);
+  font-weight: 600;
+}
+.pestana:hover { background: #21262d; }
+.pestana[aria-selected="true"] { background: #21262d; color: var(--texto); }
+
+/* Resultado y botones */
+.salida {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.salida.separado { margin-top: 16px; }
+.resultado {
+  flex: 1;
+  min-width: 0;
+  padding: 12px;
+  background: var(--bg);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  color: var(--texto);
+  font: 1.05rem ui-monospace, "Cascadia Code", Menlo, monospace;
+  overflow-wrap: anywhere;
+  min-height: 3em;
+  display: flex;
+  align-items: center;
+}
+.resultado.pequeno { font-size: .8rem; }
+button {
+  border: 1px solid var(--borde);
+  background: #21262d;
+  color: var(--texto);
+  border-radius: 8px;
+  padding: 0 14px;
+  font: inherit;
+  cursor: pointer;
+}
+button:hover { background: #30363d; }
+button:disabled { opacity: .6; cursor: wait; }
+button.principal {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  background: var(--acento);
+  border-color: transparent;
+  font-weight: 600;
+}
+button.principal:hover { background: #3fb950; }
+button.secundario {
+  margin-top: 8px;
+  padding: 6px 10px;
+  font-size: .8rem;
+  color: var(--suave);
 }
 
-function elegir(texto) {
-  return texto[enteroAleatorio(texto.length)];
+/* Generador */
+.barra {
+  height: 6px;
+  background: var(--borde);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
 }
-
-function generar(longitud, usarMayusculas, usarNumeros, usarSimbolos) {
-  const grupos = [MINUSCULAS];
-  if (usarMayusculas) grupos.push(MAYUSCULAS);
-  if (usarNumeros) grupos.push(NUMEROS);
-  if (usarSimbolos) grupos.push(SIMBOLOS);
-
-  // Al menos un carácter de cada grupo elegido
-  const caracteres = grupos.map(elegir);
-  const todos = grupos.join("");
-  while (caracteres.length < longitud) caracteres.push(elegir(todos));
-
-  // Mezcla Fisher-Yates con aleatoriedad segura
-  for (let i = caracteres.length - 1; i > 0; i--) {
-    const j = enteroAleatorio(i + 1);
-    [caracteres[i], caracteres[j]] = [caracteres[j], caracteres[i]];
-  }
-  return { texto: caracteres.join(""), tamanoAlfabeto: todos.length };
+#nivel { height: 100%; width: 0; transition: width .2s, background .2s; }
+#etiqueta { font-size: .85rem; color: var(--suave); margin-bottom: 20px; }
+.fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: .95rem;
 }
-
-function evaluar(longitud, tamanoAlfabeto) {
-  const bits = longitud * Math.log2(tamanoAlfabeto);
-  if (bits < 50) return { nombre: "Débil", color: "var(--debil)", ancho: 30, bits };
-  if (bits < 80) return { nombre: "Media", color: "var(--media)", ancho: 65, bits };
-  return { nombre: "Fuerte", color: "var(--fuerte)", ancho: 100, bits };
+input[type=range] { width: 100%; accent-color: var(--acento); margin-bottom: 16px; }
+label.opcion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  cursor: pointer;
 }
+input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--acento); }
+.aviso { margin-top: 16px; font-size: .8rem; color: var(--suave); text-align: center; }
 
-const $ = (id) => document.getElementById(id);
-
-function actualizar() {
-  const longitud = Number($("longitud").value);
-  $("valorLongitud").textContent = longitud;
-
-  const { texto, tamanoAlfabeto } = generar(
-    longitud,
-    $("mayusculas").checked,
-    $("numeros").checked,
-    $("simbolos").checked
-  );
-  $("resultado").textContent = texto;
-
-  const nivel = evaluar(longitud, tamanoAlfabeto);
-  $("nivel").style.width = nivel.ancho + "%";
-  $("nivel").style.background = nivel.color;
-  $("etiqueta").textContent = `${nivel.nombre} · ${Math.round(nivel.bits)} bits de entropía`;
-  $("copiar").textContent = "Copiar";
+/* Cifrar y descifrar */
+.ayuda { margin: 0 0 4px; font-size: .9rem; color: var(--suave); }
+label.campo { display: block; margin: 16px 0 6px; font-size: .9rem; }
+input[type=password], input[type=text], textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  color: var(--texto);
+  font: .95rem ui-monospace, "Cascadia Code", Menlo, monospace;
 }
+textarea { resize: vertical; }
+.estado { min-height: 1.4em; margin: 8px 0 0; font-size: .85rem; color: var(--suave); }
+.estado.error { color: var(--debil); }
+.estado.ok { color: var(--fuerte); }
 
-async function copiar() {
-  const texto = $("resultado").textContent;
-  try {
-    await navigator.clipboard.writeText(texto);
-    $("copiar").textContent = "¡Copiada!";
-  } catch {
-    $("copiar").textContent = "Selecciona y copia";
-  }
-}
-
-$("generar").addEventListener("click", actualizar);
-$("copiar").addEventListener("click", copiar);
-["longitud", "mayusculas", "numeros", "simbolos"].forEach((id) =>
-  $(id).addEventListener("input", actualizar)
-);
-actualizar();
+:focus-visible { outline: 2px solid #58a6ff; outline-offset: 2px; }
