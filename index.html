@@ -3,33 +3,85 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Generador de contraseñas seguras</title>
+<title>Generador y cifrador de contraseñas</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main>
-  <h1>🔑 Generador de contraseñas seguras</h1>
-  <p class="sub">Todo se genera en tu navegador. Nada se guarda ni se envía.</p>
+  <h1>🔑 Contraseñas seguras</h1>
+  <p class="sub">Todo ocurre en tu navegador. Nada se guarda ni se envía.</p>
 
-  <div class="salida">
-    <div id="resultado" aria-live="polite"></div>
-    <button id="copiar" type="button">Copiar</button>
+  <div class="pestanas" role="tablist" aria-label="Herramientas">
+    <button type="button" role="tab" class="pestana" id="tab-generar" aria-controls="panel-generar" aria-selected="true">Generar</button>
+    <button type="button" role="tab" class="pestana" id="tab-cifrar" aria-controls="panel-cifrar" aria-selected="false" tabindex="-1">Cifrar</button>
+    <button type="button" role="tab" class="pestana" id="tab-descifrar" aria-controls="panel-descifrar" aria-selected="false" tabindex="-1">Descifrar</button>
   </div>
-  <div class="barra"><div id="nivel"></div></div>
-  <div id="etiqueta"></div>
 
-  <div class="fila">
-    <label for="longitud">Longitud</label>
-    <strong id="valorLongitud">16</strong>
-  </div>
-  <input type="range" id="longitud" min="8" max="64" value="16">
+  <!-- Sección 1: generar -->
+  <section id="panel-generar" role="tabpanel" aria-labelledby="tab-generar">
+    <div class="salida">
+      <div id="resultado" class="resultado" aria-live="polite"></div>
+      <button id="copiar" type="button">Copiar</button>
+    </div>
+    <div class="barra"><div id="nivel"></div></div>
+    <div id="etiqueta"></div>
 
-  <label class="opcion"><input type="checkbox" id="mayusculas" checked> Mayúsculas (A-Z)</label>
-  <label class="opcion"><input type="checkbox" id="numeros" checked> Números (0-9)</label>
-  <label class="opcion"><input type="checkbox" id="simbolos" checked> Símbolos (!@#$…)</label>
+    <div class="fila">
+      <label for="longitud">Longitud</label>
+      <strong id="valorLongitud">16</strong>
+    </div>
+    <input type="range" id="longitud" min="8" max="64" value="16">
 
-  <button class="principal" id="generar" type="button">Generar contraseña</button>
-  <p class="aviso">Usa <code>crypto.getRandomValues</code>, el equivalente seguro de <code>secrets</code> en Python.</p>
+    <label class="opcion"><input type="checkbox" id="mayusculas" checked> Mayúsculas (A-Z)</label>
+    <label class="opcion"><input type="checkbox" id="numeros" checked> Números (0-9)</label>
+    <label class="opcion"><input type="checkbox" id="simbolos" checked> Símbolos (!@#$…)</label>
+
+    <button class="principal" id="generar" type="button">Generar contraseña</button>
+    <p class="aviso">Usa <code>crypto.getRandomValues</code>, el generador aleatorio seguro del navegador.</p>
+  </section>
+
+  <!-- Sección 2: cifrar -->
+  <section id="panel-cifrar" role="tabpanel" aria-labelledby="tab-cifrar" hidden>
+    <p class="ayuda">Protege una contraseña con una clave maestra. Guarda el texto cifrado: sin la clave maestra no se puede recuperar.</p>
+
+    <label class="campo" for="textoCifrar">Contraseña o texto a cifrar</label>
+    <input type="password" id="textoCifrar" autocomplete="off">
+    <button type="button" id="usarGenerada" class="secundario">Usar la contraseña de la pestaña Generar</button>
+
+    <label class="campo" for="claveCifrar">Clave maestra</label>
+    <input type="password" id="claveCifrar" autocomplete="new-password">
+
+    <label class="opcion"><input type="checkbox" id="mostrarCifrar"> Mostrar lo que escribo</label>
+
+    <button class="principal" id="botonCifrar" type="button">Cifrar</button>
+
+    <div class="salida separado">
+      <div id="resultadoCifrado" class="resultado pequeno" aria-live="polite"></div>
+      <button id="copiarCifrado" type="button">Copiar</button>
+    </div>
+    <p id="estadoCifrar" class="estado" role="status"></p>
+  </section>
+
+  <!-- Sección 3: descifrar -->
+  <section id="panel-descifrar" role="tabpanel" aria-labelledby="tab-descifrar" hidden>
+    <p class="ayuda">Pega el texto cifrado y escribe la misma clave maestra con la que lo cifraste.</p>
+
+    <label class="campo" for="textoDescifrar">Texto cifrado</label>
+    <textarea id="textoDescifrar" rows="4" autocomplete="off" spellcheck="false"></textarea>
+
+    <label class="campo" for="claveDescifrar">Clave maestra</label>
+    <input type="password" id="claveDescifrar" autocomplete="current-password">
+
+    <label class="opcion"><input type="checkbox" id="mostrarDescifrar"> Mostrar lo que escribo</label>
+
+    <button class="principal" id="botonDescifrar" type="button">Descifrar</button>
+
+    <div class="salida separado">
+      <div id="resultadoDescifrado" class="resultado" aria-live="polite"></div>
+      <button id="copiarDescifrado" type="button">Copiar</button>
+    </div>
+    <p id="estadoDescifrar" class="estado" role="status"></p>
+  </section>
 </main>
 
 <script src="script.js"></script>
