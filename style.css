@@ -147,4 +147,4 @@ textarea { resize: vertical; }
 .estado.error { color: var(--debil); }
 .estado.ok { color: var(--fuerte); }
 
-:focus-visible { outline: 2px solid #58a6ff; outline-offset: 2px; }
+:focus-visible { outline: 2px solid #58a6ff; outline-offset: 2px; } 2px; }
